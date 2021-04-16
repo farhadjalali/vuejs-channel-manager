@@ -1,17 +1,20 @@
 <template>
     <ul class="px-4 overflow-auto">
-        <li class="flex items-center px-1 align-far py-1" :key="channel.id" v-for="channel of channels">
+        <li class="flex items-center flex-row px-1 whitespace-nowrap  py-1" :key="channel.id" v-for="channel of channels">
             <!-- Left -->
             <div class="flex items-center flex-auto">
+                <!-- Sort Indicator -->
                 <Icon class="sort-indicator text-gray-300 cursor-move" icon="grip-vertical" size="sm"/>
 
+                <!-- Icon -->
                 <AvatarMd :icon="getIcon(channel)"/>
 
+                <!-- Channel title -->
                 <div class="order-2">{{channel.title}}</div>
             </div>
 
-            <!-- Right -->
-            <InlineButton label="Remove" class="font-medium" @click="removeChannel(channel)"/>
+            <!-- Remove Button -->
+            <InlineButton label="Remove" class="pl-5 font-medium" @click="removeChannel(channel)"/>
         </li>
     </ul>
 </template>
@@ -58,7 +61,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .sortable-ghost {
         background-color: #f5f5f5;
         border-radius: 6px;

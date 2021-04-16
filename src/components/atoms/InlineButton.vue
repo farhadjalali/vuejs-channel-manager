@@ -15,6 +15,6 @@
 
 <style lang="scss" scoped>
     button {
-        color: #838389
+        color: var(--color-inline-button-text)
     }
 </style>

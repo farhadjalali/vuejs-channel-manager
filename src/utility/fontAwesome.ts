@@ -11,6 +11,7 @@ import {ChannelType} from "@/types/enums";
 library.add(faUserSecret, faGripVertical, faSearch, faPhone, faWhatsapp, faEnvelope)
 Vue.component('FontAwesomeIcon', FontAwesomeIcon)
 
+/* The fontawsome icon based on the channel type  */
 export const channelIcons = {
     [ChannelType.Gmail]: ["fas", "envelope"],
     [ChannelType.Whatsapp]: ['fab', "whatsapp"],

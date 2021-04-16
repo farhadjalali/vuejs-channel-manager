@@ -15,7 +15,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .avatar-md {
         background: var(--color-avatar-bg);
     }

@@ -9,7 +9,7 @@
     @Component({})
     export default class Icon extends Vue {
         @Prop()
-        icon!: string
+        icon!: string | string[]
 
         @Prop()
         size!: string

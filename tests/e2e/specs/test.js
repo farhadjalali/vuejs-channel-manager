@@ -1,8 +1,13 @@
-// https://docs.cypress.io/api/introduction/api.html
+describe('Page: Home', () => {
+    it('Check showing Channel Manager by clicking the button', () => {
+        cy.visit('/')
+        cy.contains('button', 'Show channels')
 
-describe('My First Test', () => {
-  it('Visits the app root url', () => {
-    cy.visit('/')
-    cy.contains('h1', 'Welcome to Your Vue.js + TypeScript App')
-  })
+        cy.get('button').click()
+        cy.get('.channel-manager').should('be.visible')
+    })
+
+    it('Check Channels number (must be 5)', () => {
+        cy.get('.channel-manager li').should('have.length', 5)
+    })
 })

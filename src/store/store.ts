@@ -27,6 +27,7 @@ const mutations = {
                 state.channels = state.channels.filter(channel => channel != alter.remove)
 
             else if (alter.reorder) {
+                // Not the best way. just as a quick prototype
                 alter.reorder.channel.order = alter.reorder.newOrder
             }
         }
