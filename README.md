@@ -1,11 +1,7 @@
 # vuejs-channel-manager
 
-vue add atomic-design
-vue add vuex
-vue add tailwind
-
-
-sortablejs
+## Specific external libraries
+* sortablejs
 
 ## Project setup
 ```
@@ -37,5 +33,7 @@ npm run test:e2e
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Added vuejs plugings
+* vue add atomic-design
+* vue add vuex
+* vue add tailwind

@@ -12,3 +12,9 @@
         label!: string
     }
 </script>
+
+<style lang="scss" scoped>
+    button {
+        color: #838389
+    }
+</style>

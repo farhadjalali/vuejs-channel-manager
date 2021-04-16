@@ -23,18 +23,18 @@
         inputValue = ""
 
         @Emit("change")
-        change() {
+        change(): string {
             const val = this.inputValue
             this.inputValue = ""
             return val
         }
 
         @Emit("input")
-        input() {
+        input(): string {
             return this.inputValue
         }
 
-        created() {
+        created(): void {
             this.inputValue = this.value || ""
         }
     }

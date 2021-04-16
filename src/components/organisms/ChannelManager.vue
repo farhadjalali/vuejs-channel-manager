@@ -2,7 +2,8 @@
     <div class="channel-manager flex flex-col p-4 rounded-xl border popup-shadow">
         <RoundInput place-holder="Add channel" icon="search" class="w-full" @change="addChannel" @input="filteringChannels"/>
 
-        <ChannelsList v-if="filteredChannels.length" class="w-full my-2" :channels="filteredChannels" @remove-channel="removeChannel"/>
+        <ChannelsList v-if="filteredChannels.length" class="w-full my-2 flex-grow" :channels="filteredChannels"
+                      @remove-channel="removeChannel" @reorder-channel="reorderChannel"/>
 
         <div class="p-2 text-gray-500 text-sm" v-else-if="filterPhrase">
             <span>Press Enter to create an item:</span>
@@ -10,7 +11,7 @@
         </div>
 
         <div class="text-right py-2 w-full" v-if="alters.length">
-            <RoundButton label="Cancel" @click="close"/>
+            <RoundButton label="Cancel" class="border" @click="close"/>
             <RoundButton label="Apply" class="bg-black text-white" @click="apply"/>
         </div>
     </div>
@@ -19,8 +20,7 @@
 <script lang="ts">
     import Vue from "vue"
     import {Component, Emit, Prop} from "vue-property-decorator"
-    import {Channel, ChannelEventArg, ChannelAlter} from "@/types"
-    import {SAVE_CHANNELS} from "@/store/mutation-types"
+    import {Channel, ChannelAlter} from "@/types"
 
     const KEY_ESCAPE = "Escape"
 
@@ -31,36 +31,49 @@
         @Prop()
         channels!: Channel[]
 
+        @Emit('close')
+        close(): void {
+            // Nothing to do
+        }
+
+        @Emit('apply')
+        apply(): ChannelAlter[] {
+            return this.alters
+        }
+
         temporaryChannels: Channel[] = []
 
+        alters: ChannelAlter[] = []
+
         filterPhrase = ""
-
-        handleWindowKeydownEvent(ev: KeyboardEvent) {
-            if (ev.key == KEY_ESCAPE)
-                this.close()
-        }
-
-        mounted() {
-            window.addEventListener("keydown", this.handleWindowKeydownEvent)
-            this.temporaryChannels = [...this.channels]
-        }
-
-        destroyed() {
-            window.removeEventListener("keydown", this.handleWindowKeydownEvent)
-        }
 
         get filteredChannels(): Channel[] {
             let channels = this.filterPhrase ?
                 this.temporaryChannels.filter(channel => channel.title.toLowerCase().indexOf(this.filterPhrase.toLowerCase()) > -1) :
                 this.temporaryChannels
 
+
+            channels.sort((a, b) => a.order > b.order ? 1 : -1)
+
             return channels
         }
 
-        alters: ChannelAlter[] = []
+        mounted(): void {
+            window.addEventListener("keydown", this.handleWindowKeydownEvent)
+            this.temporaryChannels = [...this.channels]
+        }
 
-        addChannel(value: string) {
-            // Generate ID, type just for test
+        destroyed(): void {
+            window.removeEventListener("keydown", this.handleWindowKeydownEvent)
+        }
+
+        handleWindowKeydownEvent(ev: KeyboardEvent): void {
+            if (ev.key == KEY_ESCAPE)
+                this.close()
+        }
+
+        addChannel(value: string): void {
+            // Generate ID and type just for test
             const maxID = this.temporaryChannels.length ? Math.max(...this.temporaryChannels.map(channel => channel.id)) : 0
             const type = Math.floor(Math.random() * 3) + 1
 
@@ -71,23 +84,17 @@
             this.filterPhrase = ""
         }
 
-        removeChannel(ev: ChannelEventArg) {
-            this.alters.push({remove: ev.channel})
-            this.temporaryChannels = this.temporaryChannels.filter(channel => channel != ev.channel)
+        reorderChannel(ev: { channel: Channel, newOrder: number }): void {
+            this.alters.push({reorder: ev})
         }
 
-        filteringChannels(phrase: string) {
+        removeChannel(channel: Channel): void {
+            this.alters.push({remove: channel})
+            this.temporaryChannels = this.temporaryChannels.filter(ch => ch != channel)
+        }
+
+        filteringChannels(phrase: string): void {
             this.filterPhrase = phrase
-        }
-
-        @Emit('close')
-        close() {
-            return null
-        }
-
-        @Emit('apply')
-        apply() {
-            return this.alters
         }
     }
 

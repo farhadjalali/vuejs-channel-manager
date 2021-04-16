@@ -7,16 +7,11 @@ export interface Channel {
     title: string
 }
 
-export interface ChannelEventArg {
-    originalEvent: Event
-    channel: Channel
-}
-
 export interface ChannelAlter {
     add?: Channel
     remove?: Channel
     reorder?: {
-        id: number
+        channel: Channel
         newOrder: number
     }
 }

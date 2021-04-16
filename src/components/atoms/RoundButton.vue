@@ -1,5 +1,5 @@
 <template>
-    <button @click="$emit('click', $event)" class="mx-1 py-1 px-4 border rounded-full">{{label}}</button>
+    <button @click="$emit('click', $event)" class="mx-1 py-1 px-6 rounded-full">{{label}}</button>
 </template>
 
 <script lang="ts">

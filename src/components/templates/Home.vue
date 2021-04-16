@@ -4,14 +4,14 @@
 
         <RoundButton v-if="!showChannelsPopup" label="Show channels" @click="showChannelsPopup=true"/>
 
-        <ChannelManager v-else :channels="channels" @close="close"/>
+        <ChannelManager v-else :channels="channels" @close="close" @apply="apply"/>
     </div>
 </template>
 
 <script lang="ts">
     import {Component, Emit, Prop, Vue} from 'vue-property-decorator'
     import ChannelManager from "@/components/organisms/ChannelManager.vue"
-    import {Channel} from "@/types"
+    import {Channel, ChannelAlter} from "@/types"
 
     @Component({
         components: {
@@ -22,10 +22,14 @@
         @Prop()
         channels!: Channel[]
 
-        @Emit('close')
-        close(apply: boolean) {
+        close(): void {
             this.showChannelsPopup = false
-            return apply
+        }
+
+        @Emit('apply')
+        apply(alters: ChannelAlter[]): ChannelAlter[] {
+            this.showChannelsPopup = false
+            return alters
         }
 
         private showChannelsPopup = false
