@@ -1,5 +1,12 @@
 # vuejs-channel-manager
 
+vue add atomic-design
+vue add vuex
+vue add tailwind
+
+
+sortablejs
+
 ## Project setup
 ```
 npm install
