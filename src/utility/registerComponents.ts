@@ -1,5 +1,5 @@
 /* Add 'Atom' components */
-import Vue from "vue";
+import Vue from "vue"
 import Icon from "@/components/atoms/Icon.vue";
 import InlineButton from "@/components/atoms/InlineButton.vue";
 import RoundButton from "@/components/atoms/RoundButton.vue";

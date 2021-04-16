@@ -9,7 +9,11 @@
     import Vue from "vue"
     import {Component, Emit, Prop} from "vue-property-decorator"
 
-    @Component({})
+    @Component({
+        name: 'RoundInput',
+        components: {
+        }
+    })
     export default class RoundInput extends Vue {
         @Prop()
         placeHolder?: string

@@ -58,9 +58,12 @@
             return channels
         }
 
+        created() {
+            this.temporaryChannels = [...this.channels]
+        }
+
         mounted(): void {
             window.addEventListener("keydown", this.handleWindowKeydownEvent)
-            this.temporaryChannels = [...this.channels]
         }
 
         destroyed(): void {
