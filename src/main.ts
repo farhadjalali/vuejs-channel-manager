@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-import {store} from './store'
+import store from './state/store'
 import './assets/tailwind.css'
 import './utility/fontAwesome'
 import './utility/registerComponents'
@@ -8,10 +8,15 @@ import './directives'
 
 Vue.config.productionTip = false
 
-/* eslint-disable no-new */
-new Vue({
-    el: '#app',
+const app = new Vue({
     store,
-    components: {App},
-    template: '<App/>'
-})
+    render: (h) => h(App),
+}).$mount('#app')
+
+// If running e2e tests...
+if (process.env.VUE_APP_TEST === 'e2e') {
+    // Attach the app to the window, which can be useful
+    // for manually setting state in Cypress commands
+    // such as `cy.logIn()`.
+    (window as any).__app__ = app
+}

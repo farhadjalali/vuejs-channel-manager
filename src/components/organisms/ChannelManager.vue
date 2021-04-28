@@ -1,7 +1,7 @@
 <template>
     <div class="channel-manager flex flex-col p-4 rounded-xl border popup-shadow">
         <!-- Search Box -->
-        <RoundInput place-holder="Add channel" icon="search" class="w-full" @change="addChannel" @input="filteringChannels"/>
+        <RoundInput place-holder="Add channel" name="add-channel" icon="search" class="w-full" @change="addChannel" @input="filteringChannels"/>
 
         <!-- Channels List -->
         <ChannelsList v-if="filteredChannels.length" class="w-full my-2 flex-grow" :channels="filteredChannels"
@@ -14,7 +14,7 @@
         </div>
 
         <!-- Cancel / Apply -->
-        <div class="text-right py-2 w-full" v-if="alters.length">
+        <div class="text-right py-2 w-full" v-if="dirty">
             <RoundButton label="Cancel" class="border" @click="close"/>
             <RoundButton label="Apply" class="bg-black text-white" @click="apply"/>
         </div>
@@ -24,11 +24,11 @@
 <script lang="ts">
     import Vue from "vue"
     import {Component, Emit, Prop} from "vue-property-decorator"
-    import {Channel, ChannelAlter} from "@/types"
-    import {ChannelType} from "@/types/enums"
+    import {Channel} from "@/types"
     import ChannelsList from "@/components/organisms/ChannelsList.vue"
 
     const KEY_ESCAPE = "Escape"
+    const CHANNEL_TYPES_COUNT = 3
 
     @Component({
         components: {ChannelsList}
@@ -43,15 +43,15 @@
         }
 
         @Emit('apply')
-        apply(): ChannelAlter[] {
-            return this.alters
+        apply(): Channel[] {
+            return this.temporaryChannels
         }
 
         // To keep list of channels while this popup is up
         temporaryChannels: Channel[] = []
 
-        // To save the status of channel changes (creating / removing / altering)
-        alters: ChannelAlter[] = []
+        // Keeps if there is a change
+        dirty = false
 
         filterPhrase = ""
 
@@ -60,13 +60,11 @@
                 this.temporaryChannels.filter(channel => channel.title.toLowerCase().indexOf(this.filterPhrase.toLowerCase()) > -1) :
                 this.temporaryChannels
 
-            channels.sort((a, b) => a.order > b.order ? 1 : -1)
-
             return channels
         }
 
         created() {
-            this.temporaryChannels = [...this.channels]
+            this.temporaryChannels = JSON.parse(JSON.stringify(this.channels))
         }
 
         mounted(): void {
@@ -84,25 +82,30 @@
         }
 
         addChannel(value: string): void {
+            // Don't add a channel if a any channel is visible
+            if (this.filteredChannels.length)
+                return
+
             // Generate ID and a random type just for test
             const maxID = this.temporaryChannels.length ? Math.max(...this.temporaryChannels.map(channel => channel.id)) : 0
-            const type = Math.floor(Math.random() * Object.keys(ChannelType).length) + 1
+            const type = Math.floor(Math.random() * CHANNEL_TYPES_COUNT) + 1
 
-            // Set the order equals the id, while initing the channel object
-            const channel: Channel = {id: maxID + 1, order: maxID + 1, title: value, type}
-            this.alters.push({add: channel})
+            const channel: Channel = {id: maxID + 1, title: value, type}
             this.temporaryChannels.push(channel)
+            this.dirty = true
 
             this.filterPhrase = ""
         }
 
-        reorderChannel(ev: { channel: Channel, newOrder: number }): void {
-            this.alters.push({reorder: ev})
+        reorderChannel(ev: { channel: Channel, oldIndex: number, newIndex: number }): void {
+            this.temporaryChannels.splice(ev.oldIndex, 1)
+            this.temporaryChannels.splice(ev.newIndex, 0, ev.channel)
+            this.dirty = true
         }
 
         removeChannel(channel: Channel): void {
-            this.alters.push({remove: channel})
-            this.temporaryChannels = this.temporaryChannels.filter(ch => ch != channel)
+            this.temporaryChannels.splice(this.temporaryChannels.indexOf(channel), 1)
+            this.dirty = true
         }
 
         filteringChannels(phrase: string): void {
@@ -115,7 +118,7 @@
 <style lang="scss">
     .channel-manager {
         width: 550px;
-        height: 400px;
+        min-height: 400px;
     }
 
     @media (max-width: 640px) {

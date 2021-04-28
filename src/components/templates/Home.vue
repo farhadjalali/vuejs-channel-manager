@@ -11,7 +11,7 @@
 <script lang="ts">
     import {Component, Emit, Prop, Vue} from 'vue-property-decorator'
     import ChannelManager from "@/components/organisms/ChannelManager.vue"
-    import {Channel, ChannelAlter} from "@/types"
+    import {Channel} from "@/types"
 
     @Component({
         components: {
@@ -27,9 +27,9 @@
         }
 
         @Emit('apply')
-        apply(alters: ChannelAlter[]): ChannelAlter[] {
+        apply(channels: Channel[]): Channel[] {
             this.showChannelsPopup = false
-            return alters
+            return channels
         }
 
         private showChannelsPopup = false

@@ -1,7 +1,7 @@
 <template>
     <div class="round-input flex items-center border rounded-full p-2">
         <Icon :icon="icon" class="mx-1 text-gray-400"/>
-        <input class="px-1 flex-grow outline-none bg-transparent" v-focus :placeholder="placeHolder" v-model="inputValue" @change="change" @input="input"/>
+        <input :name="name" class="px-1 flex-grow outline-none bg-transparent" v-focus :placeholder="placeHolder" v-model="inputValue" @change="change" @input="input"/>
     </div>
 </template>
 
@@ -16,6 +16,9 @@
 
         @Prop()
         icon?: string
+
+        @Prop()
+        name?: string
 
         @Prop()
         value?: string

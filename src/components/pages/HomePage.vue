@@ -1,12 +1,12 @@
 <template>
-    <Home :channels="$store.state.channels" @apply="apply"/>
+    <Home :channels="$store.state.channels.list" @apply="apply"/>
 </template>
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator'
     import Home from "@/components/templates/Home.vue"
-    import {ChannelAlter} from "@/types"
-    import {SAVE_CHANNELS} from "@/store/mutation-types"
+    import {Channel} from "@/types"
+    import {SAVE_CHANNELS} from "@/state/mutation-types"
 
     @Component({
         components: {
@@ -14,9 +14,8 @@
         },
     })
     export default class HomePage extends Vue {
-
-        apply(alters: ChannelAlter[]): void {
-            this.$store.commit(SAVE_CHANNELS, alters)
+        apply(channels: Channel[]): void {
+            this.$store.commit(SAVE_CHANNELS, channels)
         }
     }
 </script>

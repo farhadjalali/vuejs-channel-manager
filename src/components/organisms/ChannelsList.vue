@@ -31,8 +31,8 @@
         @Prop() channels!: Channel[]
 
         @Emit("reorder-channel")
-        reorderChannel(channel: Channel, newOrder: number): { channel: Channel, newOrder: number } {
-            return {channel, newOrder}
+        reorderChannel(channel: Channel, oldIndex: number, newIndex: number): { channel: Channel, oldIndex: number, newIndex: number } {
+            return {channel, oldIndex, newIndex}
         }
 
         @Emit("remove-channel")
@@ -45,11 +45,9 @@
                 handle: ".sort-indicator",
                 chosenClass: "sortable-ghost",
                 onEnd: (ev: SortableEvent) => {
-                    if (ev.oldIndex != null && ev.newIndex != null) {
+                    if (ev.oldIndex != ev.newIndex && ev.oldIndex && ev.newIndex) {
                         const channel = this.channels[ev.oldIndex]
-                        const prevChannel = this.channels[ev.newIndex]
-                        const newOrder = prevChannel.order - 1 // TODO: Needs to be improved
-                        this.reorderChannel(channel, newOrder)
+                        this.reorderChannel(channel, ev.oldIndex, ev.newIndex)
                     }
                 }
             })
